@@ -21,9 +21,9 @@ CREATE TABLE `delilah_resto`.`role` (
   `password` VARCHAR(255) NOT NULL,
   `creation_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
-  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
-  INDEX `fk_role_id_idx` (`role_id` ASC) VISIBLE,
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC),
+  INDEX `fk_role_id_idx` (`role_id` ASC),
   CONSTRAINT `fk_role_id`
     FOREIGN KEY (`role_id`)
     REFERENCES `delilah_resto`.`role` (`role_id`)
@@ -39,7 +39,7 @@ CREATE TABLE `delilah_resto`.`product` (
   `price` DECIMAL(7,2) NOT NULL,
   `image_url` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`product_id`),
-  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) VISIBLE);
+  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) );
 
 INSERT INTO `delilah_resto`.`product` (`product_name`, `product_description`, `price`, `image_url`) VALUES ('Bagel de salmón', 'Bagel especiado con cebolla, sal, comino y queso; relleno de salmon asado con sal rosada del Himalaya', '425', 'https://placeralplato.com/files/2016/07/Bagels-de-salmn-e1468696119574.jpg');
 INSERT INTO `delilah_resto`.`product` (`product_name`, `product_description`, `price`, `image_url`) VALUES ('Hamburguesa clásica', 'Hamburguesa carne, queso americano premium, lechuga, tomate y salsa de la casa.', '350', 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/sabemos-porque-el-logo-de-mcdonal-s-es-de-color-amarillo-1534934316.jpg?resize=980:*');
@@ -54,7 +54,7 @@ CREATE TABLE `delilah_resto`.`status` (
   `status` VARCHAR(45) NOT NULL,
   `description` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`status_id`),
-  UNIQUE INDEX `status_UNIQUE` (`status` ASC) VISIBLE);
+  UNIQUE INDEX `status_UNIQUE` (`status` ASC) );
 
 INSERT INTO `delilah_resto`.`status` (`status`, `description`) VALUES ('NUEVO', 'Nuevo pedido');
 INSERT INTO `delilah_resto`.`status` (`status`, `description`) VALUES ('CONFIRMADO', 'El restaurante ha recibido el pedido');
@@ -78,9 +78,9 @@ CREATE TABLE `delilah_resto`.`order` (
   `payment_method_id` INT NOT NULL,
   `creation_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`order_id`),
-  INDEX `fk_user_id_idx` (`user_id` ASC) VISIBLE,
-  INDEX `fk_status_id_idx` (`status_id` ASC) VISIBLE,
-  INDEX `fk_payment_method_id_idx` (`payment_method_id` ASC) VISIBLE,
+  INDEX `fk_user_id_idx` (`user_id` ASC) ,
+  INDEX `fk_status_id_idx` (`status_id` ASC) ,
+  INDEX `fk_payment_method_id_idx` (`payment_method_id` ASC) ,
   CONSTRAINT `fk_user_id`
     FOREIGN KEY (`user_id`)
     REFERENCES `delilah_resto`.`user` (`user_id`)
@@ -106,8 +106,8 @@ CREATE TABLE `delilah_resto`.`order_detail` (
   `quantity` INT NOT NULL,
   `total_product_price` DECIMAL(7,2) NOT NULL,
   PRIMARY KEY (`order_detail_id`),
-  INDEX `fk_order_id_idx` (`order_id` ASC) VISIBLE,
-  INDEX `fk_product_id_idx` (`product_id` ASC) VISIBLE,
+  INDEX `fk_order_id_idx` (`order_id` ASC) ,
+  INDEX `fk_product_id_idx` (`product_id` ASC) ,
   CONSTRAINT `fk_order_id`
     FOREIGN KEY (`order_id`)
     REFERENCES `delilah_resto`.`order` (`order_id`)
