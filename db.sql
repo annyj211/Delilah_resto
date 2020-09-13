@@ -76,6 +76,7 @@ CREATE TABLE `delilah_resto`.`order` (
   `user_id` INT NOT NULL,
   `status_id` INT NOT NULL,
   `payment_method_id` INT NOT NULL,
+  `description` VARCHAR(1000) NULL,
   `creation_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`order_id`),
   INDEX `fk_user_id_idx` (`user_id` ASC) ,
@@ -98,6 +99,7 @@ CREATE TABLE `delilah_resto`.`order` (
     ON UPDATE NO ACTION);
 
 INSERT INTO `delilah_resto`.`order` (`user_id`, `status_id`, `payment_method_id`) VALUES ('1', '4', '2');
+UPDATE `delilah_resto`.`order` SET `description` = '1xBagel de salmón 2xHamburguesa clásica 1xSandwich veggie' WHERE (`order_id` = '1');
 
 CREATE TABLE `delilah_resto`.`order_detail` (
   `order_detail_id` INT NOT NULL AUTO_INCREMENT,

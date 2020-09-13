@@ -1,0 +1,3 @@
+FUENTES DE INFORMACION
+
+DATE_FORMAT(o.creation_date, "%H:%i") AS time //https://stackoverflow.com/questions/29573122/how-to-get-time-format-with-hours-and-minutes-from-mysql-database
