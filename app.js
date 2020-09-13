@@ -121,9 +121,60 @@ server.post ("/productos",validaProducto, (req, res, next)=>{
 })
 
 //UPDATE
+server.put ("/productos/:id",validaProducto,(req, res, next)=>{
+    let nombreProducto = req.body.product_name;
+    let descripcionProducto = req.body.product_description;
+    let precio = req.body.price;
+    let urlImagen = req.body.image_url;
+    let id = req.params.id;
 
+    db.query ("UPDATE `delilah_resto`.`product` SET "+
+    "`product_name` = :pn, "+
+    "`product_description` = :pd, "+
+    "`price` = :p, "+
+    "`image_url` = :u "+
+    "WHERE (`product_id` = :pid);",
+    {
+        type: Sequelize.QueryTypes.UPDATE,
+        replacements:{
+            pn: nombreProducto,
+            pd: descripcionProducto,
+            p: precio,
+            u: urlImagen,
+            pid: id
+        }
+    })
+    .then ((data)=>{
+        res.status(200).json ()//200 significa OK
+    })
+    .catch ((error)=>{
+        res.status(500);
+        res.json ({message: error})
+    })
+})
 
 //DELETE
+
+server.delete ("/productos/:id",(req, res, next)=>{
+    let id = req.params.id;
+    db.query("DELETE FROM `delilah_resto`.`product` WHERE (`product_id` = :pid);",
+    {
+        type: Sequelize.QueryTypes.DELETE,
+        replacements:{
+            pid: id
+        }
+    })
+    .then ((data)=>{
+        res.json (data)
+    })
+    .catch ((error)=>{
+        res.status(500);
+        res.json ({message: error})
+    })
+})
+
+
+
 
 server.listen (3010,()=>{
     console.log ("el servidor express empezo a escuchar por el puerto 3010")
