@@ -51,6 +51,80 @@ server.get ("/orders", (req, res, next)=>{
     })
 })
 
+//PRODUCTOS
+
+//Middleware
+function validaProducto (req, res, next){
+    let nombreProducto = req.body.product_name;
+    let descripcionProducto = req.body.product_description;
+    let precio = req.body.price;
+    let urlImagen= req.body.image_url;
+    if(nombreProducto&&descripcionProducto&&precio&&urlImagen){
+        next();
+    }
+    else{
+        res.status(400);
+        res.json({message: "Por favor, ingrese todos los campos requeridos"})
+    }
+}
+
+
+//CREATE READ UPDATE DELETE
+
+//Read
+server.get ("/productos",(req, res, next)=>{
+    db.query ("SELECT * FROM delilah_resto.product;", 
+    {
+        type: Sequelize.QueryTypes.SELECT,
+    })
+    .then ((data)=>{
+        res.json(data);
+    })
+    .catch ((error)=>{
+        res.status(500);
+        res.json({message: error})
+    })
+})
+
+//CREATE
+server.post ("/productos",validaProducto, (req, res, next)=>{
+    let nombreProducto = req.body.product_name;
+    let descripcionProducto = req.body.product_description;
+    let precio = req.body.price;
+    let urlImagen= req.body.image_url;
+    db.query ("INSERT INTO `delilah_resto`.`product` "+
+    "(`product_name`, `product_description`, `price`, `image_url`) "+
+    "VALUES (:pn, :pd, :p, :u); ", 
+    {
+        type: Sequelize.QueryTypes.INSERT,
+        replacements:{
+            pn: nombreProducto,
+            pd: descripcionProducto,
+            p: precio,
+            u: urlImagen
+        }
+    })
+    .then ((data)=>{
+        const id = data [0];
+        return db.query ('SELECT * FROM product WHERE product_id =:pid' , { //seleccione TODOS los campos de la tabla product donde produc_id es igual a pid
+            type: Sequelize.QueryTypes.SELECT,
+            replacements: {pid: id}
+        })
+    })
+    .then ((data)=>{
+        res.status(201).json (data[0])//201 significa CREATED
+    })
+    .catch ((error)=>{
+        res.status(500);
+        res.json ({message: error})
+    })
+})
+
+//UPDATE
+
+
+//DELETE
+
 server.listen (3010,()=>{
     console.log ("el servidor express empezo a escuchar por el puerto 3010")
     db.authenticate()
