@@ -274,7 +274,8 @@ server.post ("/usuarios", validaUsuario,  (req, res, next)=>{
 server.post ("/login",loginUsuario, (req, res, next)=>{
     let usuario = req.body.user_name;
     let contrasena = req.body.password;
-    db.query ("SELECT * FROM delilah_resto.user "+
+    db.query ("SELECT u.*, r.role FROM delilah_resto.user as u  "+
+    "INNER JOIN delilah_resto.role AS r "+
     "WHERE (user_name = :un OR email= :un) AND password =  :p", {
         type: Sequelize.QueryTypes.SELECT,
             replacements: {
@@ -283,7 +284,18 @@ server.post ("/login",loginUsuario, (req, res, next)=>{
         }
     })
     .then((data)=>{
-        res.status(200).json (data[0])
+        if(data.length == 0){
+            res.status(401) // 401 unauthorized
+            res.json({message : "Verifique usuario o email y contraseña"})
+        }else{
+            let user = {
+                id:data[0].user_id,
+                role: data[0].role,//el primer name equivale a el primer elemento del array con nombre name (se verifica el nombre en jwt)
+                full_name: data[0].full_name                
+            }
+            const token = jwt.sign(user, secretKey);
+            res.json({token});
+        }       
     })
     .catch ((error)=>{
         res.status(500);
