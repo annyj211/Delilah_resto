@@ -69,9 +69,9 @@ function validaProducto (req, res, next){
 }
 
 
-//CREATE READ UPDATE DELETE
+//CREATE READ UPDATE DELETE PRODUCTOS
 
-//Read
+//READ
 server.get ("/productos",(req, res, next)=>{
     db.query ("SELECT * FROM delilah_resto.product;", 
     {
@@ -173,8 +173,125 @@ server.delete ("/productos/:id",(req, res, next)=>{
     })
 })
 
+//USUARIOS
+
+//Middleware Login
+
+function loginUsuario (req, res, next){
+    let usuario = req.body.user_name;
+    let contrasena = req.body.password;
+    if(usuario&&contrasena){
+        next();
+    }
+    else{
+        res.status(400);
+        res.json({message: "Por favor, ingrese todos los campos requeridos"})
+    }
+}
+
+//MIDDLEWARE PASSWORD
 
 
+//validacion que lo que venga en el campo email sea email
+
+
+//Middleware Usuario Nuevo
+
+function validaUsuario (req, res, next){
+    let usuario = req.body.user_name;
+    let nombreUsuario = req.body.full_name;
+    let correoElectronico = req.body.email;
+    let telefono= req.body.phone;
+    let direccion = req.body.address;
+    let contrasena = req.body.password;
+    if(usuario&&nombreUsuario&&correoElectronico&&telefono&&direccion&&contrasena){
+        next();
+    }
+    else{
+        res.status(400);
+        res.json({message: "Por favor, ingrese todos los campos requeridos"})
+    }
+}
+
+//CREATE READ UPDATE DELETE USUARIOS
+
+//READ
+server.get ("/usuarios",(req, res, next)=>{
+    db.query ("SELECT * FROM delilah_resto.user;", 
+    {
+        type: Sequelize.QueryTypes.SELECT,
+    })
+    .then ((data)=>{
+        res.json(data);
+    })
+    .catch ((error)=>{
+        res.status(500);
+        res.json({message: error})
+    })
+})
+
+//CREATE USUARIO NUEVO
+
+server.post ("/usuarios", validaUsuario,  (req, res, next)=>{
+    let usuario = req.body.user_name;
+    let nombreUsuario = req.body.full_name;
+    let correoElectronico = req.body.email;
+    let telefono= req.body.phone;
+    let direccion = req.body.address;
+    let contrasena = req.body.password;
+    db.query ("INSERT INTO `delilah_resto`.`user` "+
+    "(`user_name`, `full_name`, `email`, `phone`, `address`, `password`) "+
+    "VALUES (:un, :fn, :e, :ph, :a, :p); ", 
+    {
+        type: Sequelize.QueryTypes.INSERT,
+        replacements:{
+            un: usuario,
+            fn: nombreUsuario,
+            e: correoElectronico,
+            ph: telefono,
+            a:direccion,
+            p:contrasena
+        }
+    })
+    .then ((data)=>{
+        const id = data [0];
+        return db.query ('SELECT * FROM user WHERE user_id =:uid' , { //seleccione TODOS los campos de la tabla product donde produc_id es igual a pid
+            type: Sequelize.QueryTypes.SELECT,
+            replacements: {uid: id}
+        })
+    })
+    .then ((data)=>{
+        res.status(201).json (data[0])//201 significa CREATED
+    })
+    .catch ((error)=>{
+        res.status(500);
+        res.json (error)
+    })
+})
+
+// LOGIN 
+
+server.post ("/login",loginUsuario, (req, res, next)=>{
+    let usuario = req.body.user_name;
+    let contrasena = req.body.password;
+    db.query ("SELECT * FROM delilah_resto.user "+
+    "WHERE (user_name = :un OR email= :un) AND password =  :p", {
+        type: Sequelize.QueryTypes.SELECT,
+            replacements: {
+                un: usuario,
+                p: contrasena
+        }
+    })
+    .then((data)=>{
+        res.status(200).json (data[0])
+    })
+    .catch ((error)=>{
+        res.status(500);
+        res.json (error)
+    })
+})
+
+//
 
 server.listen (3010,()=>{
     console.log ("el servidor express empezo a escuchar por el puerto 3010")

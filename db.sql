@@ -13,7 +13,7 @@ CREATE TABLE `delilah_resto`.`role` (
   CREATE TABLE `delilah_resto`.`user` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
   `role_id` INT NOT NULL DEFAULT 2,
-  `username` VARCHAR(255) NOT NULL,
+  `user_name` VARCHAR(255) NOT NULL,
   `full_name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `phone` VARCHAR(255) NOT NULL,
@@ -30,7 +30,8 @@ CREATE TABLE `delilah_resto`.`role` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-INSERT INTO `delilah_resto`.`user` (`role_id`, `username`, `full_name`, `email`, `phone`, `address`, `password`) VALUES ('1', 'lssg', 'Luz Stella Soto G', 'lssotog@gmail.com', '3016431498', 'Calle 123#45-67', 'contrasenaadmin');
+INSERT INTO `delilah_resto`.`user` (`role_id`, `user_
+name`, `full_name`, `email`, `phone`, `address`, `password`) VALUES ('1', 'lssg', 'Luz Stella Soto G', 'lssotog@gmail.com', '3016431498', 'Calle 123#45-67', 'contrasenaadmin');
 
 CREATE TABLE `delilah_resto`.`product` (
   `product_id` INT NOT NULL AUTO_INCREMENT,
@@ -124,3 +125,4 @@ CREATE TABLE `delilah_resto`.`order_detail` (
 INSERT INTO `delilah_resto`.`order_detail` (`order_id`, `product_id`, `quantity`, `total_product_price`) VALUES ('1', '1', '1', '425');
 INSERT INTO `delilah_resto`.`order_detail` (`order_id`, `product_id`, `quantity`, `total_product_price`) VALUES ('1', '2', '2', '700');
 INSERT INTO `delilah_resto`.`order_detail` (`order_id`, `product_id`, `quantity`, `total_product_price`) VALUES ('1', '3', '1', '310');
+
