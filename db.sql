@@ -126,3 +126,12 @@ INSERT INTO `delilah_resto`.`order_detail` (`order_id`, `product_id`, `quantity`
 INSERT INTO `delilah_resto`.`order_detail` (`order_id`, `product_id`, `quantity`, `total_product_price`) VALUES ('1', '2', '2', '700');
 INSERT INTO `delilah_resto`.`order_detail` (`order_id`, `product_id`, `quantity`, `total_product_price`) VALUES ('1', '3', '1', '310');
 
+
+ALTER TABLE `delilah_resto`.`order` 
+DROP FOREIGN KEY `fk_status_id`;
+ALTER TABLE `delilah_resto`.`order` 
+CHANGE COLUMN `status_id` `status_id` INT NOT NULL DEFAULT 1 ;
+ALTER TABLE `delilah_resto`.`order` 
+ADD CONSTRAINT `fk_status_id`
+  FOREIGN KEY (`status_id`)
+  REFERENCES `delilah_resto`.`status` (`status_id`);

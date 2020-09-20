@@ -16,9 +16,76 @@ server.use((req, res, next) => {
     next();
 });
 
+//
+
+
 let db = new Sequelize (
     "mysql://root:1234@localhost:3306/delilah_resto"
 )
+
+//Middleware validate token
+
+
+//Middleware Login
+
+function loginUsuario (req, res, next){
+    let usuario = req.body.user_name;
+    let contrasena = req.body.password;
+    if(usuario&&contrasena){
+        next();
+    }
+    else{
+        res.status(400);
+        res.json({message: "Por favor, ingrese todos los campos requeridos"})
+    }
+}
+
+//MIDDLEWARE PASSWORD
+
+
+//validacion que lo que venga en el campo email sea email
+
+
+//Middleware validaProducto
+function validaProducto (req, res, next){
+    let nombreProducto = req.body.product_name;
+    let descripcionProducto = req.body.product_description;
+    let precio = req.body.price;
+    let urlImagen= req.body.image_url;
+    if(nombreProducto&&descripcionProducto&&precio&&urlImagen){
+        next();
+    }
+    else{
+        res.status(400);
+        res.json({message: "Por favor, ingrese todos los campos requeridos"})
+    }
+}
+
+
+//Middleware Usuario Nuevo
+
+function validaUsuario (req, res, next){
+    let usuario = req.body.user_name;
+    let nombreUsuario = req.body.full_name;
+    let correoElectronico = req.body.email;
+    let telefono= req.body.phone;
+    let direccion = req.body.address;
+    let contrasena = req.body.password;
+    if(usuario&&nombreUsuario&&correoElectronico&&telefono&&direccion&&contrasena){
+        next();
+    }
+    else{
+        res.status(400);
+        res.json({message: "Por favor, ingrese todos los campos requeridos"})
+    }
+}
+
+
+
+
+
+
+//ORDERS
 
 server.get ("/orders", (req, res, next)=>{
     db.query ("SELECT s.status,"+ 
@@ -52,21 +119,6 @@ server.get ("/orders", (req, res, next)=>{
 })
 
 //PRODUCTOS
-
-//Middleware
-function validaProducto (req, res, next){
-    let nombreProducto = req.body.product_name;
-    let descripcionProducto = req.body.product_description;
-    let precio = req.body.price;
-    let urlImagen= req.body.image_url;
-    if(nombreProducto&&descripcionProducto&&precio&&urlImagen){
-        next();
-    }
-    else{
-        res.status(400);
-        res.json({message: "Por favor, ingrese todos los campos requeridos"})
-    }
-}
 
 
 //CREATE READ UPDATE DELETE PRODUCTOS
@@ -175,41 +227,30 @@ server.delete ("/productos/:id",(req, res, next)=>{
 
 //USUARIOS
 
-//Middleware Login
-
-function loginUsuario (req, res, next){
-    let usuario = req.body.user_name;
-    let contrasena = req.body.password;
-    if(usuario&&contrasena){
-        next();
+function validateTokenAdmin (req, res, next) {
+    try {
+    let token = req. headers ["autorization"];
+    const bearer = token.split(' ');
+    const bearerToken = bearer[1];
+    console.log(token);
+    let validUser = jwt.verify(token, secretKey);
+    console.log (valid);
+    if (validUser){
+        if (validUser.role == "Admin"){
+            next ();
+        }else {
+            res.status(403);
+            res.json({message:"No es role administrador, no autorizado"})
+        }
+        next ();
+    }else {
+        res.status (401);
+        res.json({message:"No autorizado"})
     }
-    else{
-        res.status(400);
-        res.json({message: "Por favor, ingrese todos los campos requeridos"})
     }
-}
-
-//MIDDLEWARE PASSWORD
-
-
-//validacion que lo que venga en el campo email sea email
-
-
-//Middleware Usuario Nuevo
-
-function validaUsuario (req, res, next){
-    let usuario = req.body.user_name;
-    let nombreUsuario = req.body.full_name;
-    let correoElectronico = req.body.email;
-    let telefono= req.body.phone;
-    let direccion = req.body.address;
-    let contrasena = req.body.password;
-    if(usuario&&nombreUsuario&&correoElectronico&&telefono&&direccion&&contrasena){
-        next();
-    }
-    else{
-        res.status(400);
-        res.json({message: "Por favor, ingrese todos los campos requeridos"})
+    catch(error){
+        res.status (401);
+        res.json({message:"No autorizado"})
     }
 }
 
@@ -217,7 +258,15 @@ function validaUsuario (req, res, next){
 
 //READ
 server.get ("/usuarios",(req, res, next)=>{
-    db.query ("SELECT * FROM delilah_resto.user;", 
+    db.query ("SELECT "+
+    "user_id, "+
+    "role_id, "+
+    "user_name, "+
+    "full_name, "+
+    "email, "+
+    "phone, "+
+    "address, "+
+    "creation_date FROM delilah_resto.user;", 
     {
         type: Sequelize.QueryTypes.SELECT,
     })
@@ -255,7 +304,14 @@ server.post ("/usuarios", validaUsuario,  (req, res, next)=>{
     })
     .then ((data)=>{
         const id = data [0];
-        return db.query ('SELECT * FROM user WHERE user_id =:uid' , { //seleccione TODOS los campos de la tabla product donde produc_id es igual a pid
+        return db.query ("SELECT "+
+        "user_id, "+
+        "user_name, "+
+        "full_name, "+
+        "email, "+
+        "phone, "+
+        "address, "+
+        "creation_date FROM user WHERE user_id =:uid ", { //seleccione TODOS los campos de la tabla product donde produc_id es igual a pid
             type: Sequelize.QueryTypes.SELECT,
             replacements: {uid: id}
         })
@@ -269,9 +325,71 @@ server.post ("/usuarios", validaUsuario,  (req, res, next)=>{
     })
 })
 
+//UPDATE USUARIO
+
+server.put ("/usuarios/:id",validaUsuario ,(req, res, next)=>{
+    let usuario = req.body.user_name;
+    let nombreUsuario = req.body.full_name;
+    let correoElectronico = req.body.email;
+    let telefono= req.body.phone;
+    let direccion = req.body.address;
+    let contrasena = req.body.password;
+    let id = req.params.id;
+
+    db.query ("UPDATE `delilah_resto`.`user` SET "+
+    "`user_name` = :un, "+
+    "`full_name` = :fn, "+
+    "`email` = :e, "+
+    "`phone` = :ph, "+
+    "`address` = :a, "+
+    "`password` = :ps "+
+    "WHERE (`user_id` = :uid);",
+    {
+        type: Sequelize.QueryTypes.UPDATE,
+        replacements:{
+            un: usuario,
+            fn: nombreUsuario,
+            e: correoElectronico,
+            ph: telefono,
+            a: direccion,
+            ps: contrasena,
+            uid: id
+        }
+    })
+    .then ((data)=>{
+        res.status(200).json ()//200 significa OK
+    })
+    .catch ((error)=>{
+        console.log(error);
+        res.status(500);
+        res.json ({message: error})
+    })
+})
+
+//DELETE
+
+server.delete ("/usuarios/:id",(req, res, next)=>{
+    let id = req.params.id;
+    db.query("DELETE FROM `delilah_resto`.`user` WHERE (`user_id` = :uid);",
+    {
+        type: Sequelize.QueryTypes.DELETE,
+        replacements:{
+            uid: id
+        }
+    })
+    .then ((data)=>{
+        res.json (data)
+    })
+    .catch ((error)=>{
+        res.status(500);
+        res.json ({message: error})
+    })
+})
+
+
 // LOGIN 
 
-server.post ("/login",loginUsuario, (req, res, next)=>{
+server.post ("/login", loginUsuario, (req, res, next)=>{
     let usuario = req.body.user_name;
     let contrasena = req.body.password;
     db.query ("SELECT u.*, r.role FROM delilah_resto.user as u  "+
