@@ -458,7 +458,6 @@ function passwordMatch (req, res, next){
     }
     else{
         next();
-
     }
 }
 //
@@ -533,6 +532,76 @@ server.post ("/login", loginUsuario, (req, res, next)=>{
         res.json (error)
     })
 })
+
+//
+
+//ORDER
+
+
+//CREATE READ UPDATE DELETE
+
+//Middleware validacion datos completos Orden
+
+function validacionOrden (req, res, next){
+    let id = req.body.user_id;
+    let payment_method = req.body.payment_method_id;
+    let detail = req.body.detail;
+    if (id&&payment_method&&Array.isArray(detail)&&detail.length>0){
+        next();
+    }
+    else{
+        res.status(400);
+        res.json({message:"No completo"})
+    }
+}
+
+//Middleware detalleOrden
+
+function validacionProductosOrden (req, res, next){
+    let detail = req.body.detail;
+    detail.forEach(product => {
+        let producto = product.product_id;
+        let nombre = product.product_name;
+        let precio = product.price;
+        let cantidad = product.quantity;
+        if (producto&&nombre&&precio&&cantidad){
+        }
+        else {
+            res.status(400);
+            res.json({message:"la información de los productos es incompleta"})
+        }
+    })
+    next();
+}
+//
+
+//CREATE
+server.post("/ordenes",validacionOrden, validacionProductosOrden,(req, res, next) =>{
+    let idUsuario = req.body.user_id;
+    let metodoPago = req.body.payment_method_id;
+    let detail = req.body.detail;
+    let descripcion = "";
+    detail.forEach(product => {
+        descripcion = descripcion + product.quantity+"x"+product.product_name+" ";
+    })
+    db.query ("INSERT INTO `delilah_resto`.`order` (`user_id`, `payment_method_id`, `description`) "+
+    "VALUES (:uid, :pmi, :d); ",{
+        type: Sequelize.QueryTypes.INSERT,
+        replacements:{
+            uid: idUsuario,
+            pmi: metodoPago,
+            d: descripcion,
+        }
+    }).then ((data)=>{
+        res.json(data)
+    }
+    )
+    .catch((error)=>{
+        res.status(500)
+        res.json({message:error})
+    })
+})
+
 
 //
 
