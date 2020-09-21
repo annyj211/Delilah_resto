@@ -25,6 +25,33 @@ let db = new Sequelize (
 
 //Middleware validate token
 
+function validateTokenAdmin (req, res, next) {
+    try {
+        let token = req.headers["authorization"];
+        console.log(token)
+        const bearer = token.split(' ');
+        const bearerToken = bearer[1];
+        console.log(bearerToken);
+        let validUser = jwt.verify(bearerToken, secretKey);
+        console.log (validUser);
+        if (validUser){
+            if (validUser.role == "Admin"){
+                next ();
+            }else {
+                res.status(403);
+                res.json({message:"No es role administrador, no autorizado"})
+            }           
+        }else {
+            res.status (401);
+            res.json({message:"No autorizado"})
+        }
+    }
+    catch(error){
+        res.status (401);
+        res.json({message:"No autorizado"})
+    }
+}
+
 
 //Middleware Login
 
@@ -64,7 +91,7 @@ function validaProducto (req, res, next){
 
 //Middleware Usuario Nuevo
 
-function validaUsuario (req, res, next){
+function validaCreacionUsuario (req, res, next){
     let usuario = req.body.user_name;
     let nombreUsuario = req.body.full_name;
     let correoElectronico = req.body.email;
@@ -81,8 +108,20 @@ function validaUsuario (req, res, next){
 }
 
 
-
-
+function validaEdicionUsuario (req, res, next){
+    let usuario = req.body.user_name;
+    let nombreUsuario = req.body.full_name;
+    let correoElectronico = req.body.email;
+    let telefono= req.body.phone;
+    let direccion = req.body.address;
+    if(usuario&&nombreUsuario&&correoElectronico&&telefono&&direccion){
+        next();
+    }
+    else{
+        res.status(400);
+        res.json({message: "Por favor, ingrese todos los campos requeridos"})
+    }
+}
 
 
 //ORDERS
@@ -124,7 +163,7 @@ server.get ("/orders", (req, res, next)=>{
 //CREATE READ UPDATE DELETE PRODUCTOS
 
 //READ
-server.get ("/productos",(req, res, next)=>{
+server.get ("/productos", (req, res, next)=>{
     db.query ("SELECT * FROM delilah_resto.product;", 
     {
         type: Sequelize.QueryTypes.SELECT,
@@ -139,7 +178,7 @@ server.get ("/productos",(req, res, next)=>{
 })
 
 //CREATE
-server.post ("/productos",validaProducto, (req, res, next)=>{
+server.post ("/productos", validateTokenAdmin, validaProducto, (req, res, next)=>{
     let nombreProducto = req.body.product_name;
     let descripcionProducto = req.body.product_description;
     let precio = req.body.price;
@@ -173,7 +212,7 @@ server.post ("/productos",validaProducto, (req, res, next)=>{
 })
 
 //UPDATE
-server.put ("/productos/:id",validaProducto,(req, res, next)=>{
+server.put ("/productos/:id", validateTokenAdmin, validaProducto,(req, res, next)=>{
     let nombreProducto = req.body.product_name;
     let descripcionProducto = req.body.product_description;
     let precio = req.body.price;
@@ -207,7 +246,7 @@ server.put ("/productos/:id",validaProducto,(req, res, next)=>{
 
 //DELETE
 
-server.delete ("/productos/:id",(req, res, next)=>{
+server.delete ("/productos/:id",validateTokenAdmin,(req, res, next)=>{
     let id = req.params.id;
     db.query("DELETE FROM `delilah_resto`.`product` WHERE (`product_id` = :pid);",
     {
@@ -227,32 +266,6 @@ server.delete ("/productos/:id",(req, res, next)=>{
 
 //USUARIOS
 
-function validateTokenAdmin (req, res, next) {
-    try {
-    let token = req. headers ["autorization"];
-    const bearer = token.split(' ');
-    const bearerToken = bearer[1];
-    console.log(token);
-    let validUser = jwt.verify(token, secretKey);
-    console.log (valid);
-    if (validUser){
-        if (validUser.role == "Admin"){
-            next ();
-        }else {
-            res.status(403);
-            res.json({message:"No es role administrador, no autorizado"})
-        }
-        next ();
-    }else {
-        res.status (401);
-        res.json({message:"No autorizado"})
-    }
-    }
-    catch(error){
-        res.status (401);
-        res.json({message:"No autorizado"})
-    }
-}
 
 //CREATE READ UPDATE DELETE USUARIOS
 
@@ -281,7 +294,7 @@ server.get ("/usuarios",(req, res, next)=>{
 
 //CREATE USUARIO NUEVO
 
-server.post ("/usuarios", validaUsuario,  (req, res, next)=>{
+server.post ("/usuarios", validaCreacionUsuario,  (req, res, next)=>{
     let usuario = req.body.user_name;
     let nombreUsuario = req.body.full_name;
     let correoElectronico = req.body.email;
@@ -327,13 +340,12 @@ server.post ("/usuarios", validaUsuario,  (req, res, next)=>{
 
 //UPDATE USUARIO
 
-server.put ("/usuarios/:id",validaUsuario ,(req, res, next)=>{
+server.put ("/usuarios/:id",validaEdicionUsuario ,(req, res, next)=>{
     let usuario = req.body.user_name;
     let nombreUsuario = req.body.full_name;
     let correoElectronico = req.body.email;
     let telefono= req.body.phone;
     let direccion = req.body.address;
-    let contrasena = req.body.password;
     let id = req.params.id;
 
     db.query ("UPDATE `delilah_resto`.`user` SET "+
@@ -341,8 +353,7 @@ server.put ("/usuarios/:id",validaUsuario ,(req, res, next)=>{
     "`full_name` = :fn, "+
     "`email` = :e, "+
     "`phone` = :ph, "+
-    "`address` = :a, "+
-    "`password` = :ps "+
+    "`address` = :a "+
     "WHERE (`user_id` = :uid);",
     {
         type: Sequelize.QueryTypes.UPDATE,
@@ -352,7 +363,6 @@ server.put ("/usuarios/:id",validaUsuario ,(req, res, next)=>{
             e: correoElectronico,
             ph: telefono,
             a: direccion,
-            ps: contrasena,
             uid: id
         }
     })
@@ -386,6 +396,108 @@ server.delete ("/usuarios/:id",(req, res, next)=>{
     })
 })
 
+//Middleware editar contraseña
+
+function validateToken (req, res, next) {
+    try {
+        let token = req.headers["authorization"];
+        console.log(token)
+        const bearer = token.split(' ');
+        const bearerToken = bearer[1];
+        console.log(bearerToken);
+        let validUser = jwt.verify(bearerToken, secretKey);
+        console.log (validUser);
+        if (validUser){
+            req.body.user_id = validUser.id; // se le agrega el user id desde el token
+            next ();                
+        }else {
+            res.status (401);
+            res.json({message:"No autorizado"})
+        }
+    }
+    catch(error){
+        res.status (401);
+        res.json({message:"No autorizado"})
+    }
+}
+
+//Middleware campos completos
+
+function validaCamposContrasena (req, res, next){
+    let contrasena = req.body.password;
+    let confirmPassword = req.body.confirmPassword;
+    if(contrasena&&confirmPassword){
+        next();
+    }
+    else{
+        res.status(400);
+        res.json({message: "Por favor, ingrese todos los campos requeridos"})
+    }
+}
+
+//Middleware Logitud
+function passwordLength (req, res, next){
+    let password= req.body.password;
+    if (password.length <12){
+        res.status(400);
+        res.json({message:"Please enter a password between 6-12 characters (no spaces)."})
+    }
+    else{
+        next();
+    }
+}
+//
+
+//Middleware confirmacion contraseña
+function passwordMatch (req, res, next){
+    let password=req.body.password;
+    let confirmPassword=req.body.confirmPassword;
+    if (password!=confirmPassword){
+        res.status(400);
+        res.json({message:"The passwords you entered do not match. Please fix to continue."})
+    }
+    else{
+        next();
+
+    }
+}
+//
+
+
+
+
+//Editar Contraseña
+server.put ("/usuarios/password/:id",validateToken, validaCamposContrasena, passwordLength, passwordMatch, (req, res, next)=>{
+    let password = req.body.password;
+    let paramId = req.params.id;
+    let tokenId = req.body.user_id;
+    console.log(tokenId);
+       if(paramId ==tokenId){
+        db.query("UPDATE `delilah_resto`.`user` SET `password` = :ps WHERE (`user_id` = :pi)", {
+            type: Sequelize.QueryTypes.UPDATE,
+            replacements:{
+            ps: password,
+            pi: paramId
+            }
+        }).then(
+            (data)=>{
+                res.json({message:"Contraseña actualizada correctamente"})
+            }
+        ).catch(
+            (error)=>{
+            console.log(error)
+            res.status(500);
+            res.json(error)
+            }
+        )
+    } else {
+        res.status(403);//Forbidden
+        res.json({message:"Su usuario no corresponde a la información ingresada"})
+    }
+
+
+})
+
 
 // LOGIN 
 
@@ -394,6 +506,7 @@ server.post ("/login", loginUsuario, (req, res, next)=>{
     let contrasena = req.body.password;
     db.query ("SELECT u.*, r.role FROM delilah_resto.user as u  "+
     "INNER JOIN delilah_resto.role AS r "+
+    "ON u.role_id=r.role_id "+
     "WHERE (user_name = :un OR email= :un) AND password =  :p", {
         type: Sequelize.QueryTypes.SELECT,
             replacements: {
