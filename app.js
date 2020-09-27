@@ -593,12 +593,57 @@ server.post("/ordenes",validacionOrden, validacionProductosOrden,(req, res, next
             d: descripcion,
         }
     }).then ((data)=>{
+
+        /// inserta detalle orden
+
+        
         res.json(data)
     }
     )
     .catch((error)=>{
         res.status(500)
         res.json({message:error})
+    })
+})
+
+
+// Get Status
+
+server.get ("/status",(req, res, next)=>{
+    db.query ("SELECT "+
+    "status_id, "+
+    "status, "+
+    "description FROM delilah_resto.status;", 
+    {
+        type: Sequelize.QueryTypes.SELECT,
+    })
+    .then ((data)=>{
+        res.json(data);
+    })
+    .catch ((error)=>{
+        console.log(error);
+        res.status(500);
+        res.json({message: error})
+    })
+})
+
+//
+
+//Get Payment Method
+server.get ("/metodospago",(req, res, next)=>{
+    db.query ("SELECT "+
+    "payment_method_id, "+
+    "payment_method FROM delilah_resto.payment_method;", 
+    {
+        type: Sequelize.QueryTypes.SELECT,
+    })
+    .then ((data)=>{
+        res.json(data);
+    })
+    .catch ((error)=>{
+        console.log(error);
+        res.status(500);
+        res.json({message: error})
     })
 })
 
