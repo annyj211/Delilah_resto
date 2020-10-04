@@ -1,0 +1,109 @@
+$color1_tile: rgb(58, 221, 218);
+$color-2: rgb(191, 239, 238); //background
+$color_white: white;
+$color_barra_pag: rgb(176, 220, 219);
+$color20_buttons: rgb(252, 136, 92);
+$color_letras: rgb(254, 189, 164);
+$color_iconos: rgb(0, 122, 255);
+$color_sombra_iconos: rgb(157, 202, 250);
+$color_recuadro_form: rgb(210, 212, 214);
+$color_sombra_recuadro_form: rgb(229, 230, 231);
+$color_font: rgb(103, 113, 118);
+$color_font_descripcion_text: rgb(96, 106, 112);
+$color_font_boton: rgb(255, 255, 255);
+
+
+@font-face {
+    font-family: 'FredokaOne-Regular';
+    src: url('./fonts/FredokaOne-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'NanumGothic-Regular';
+    src: url('./fonts/NanumGothic-Regular.ttf');
+}
+
+* {
+    box-sizing: border-box;
+    margin:0;
+    padding:0;
+    border:0;
+}
+
+header {
+    width: 100%;
+    background-color: $color1_tile;
+    color: $color_white;
+    font-family: "FredokaOne-Regular";
+    padding: 10px;
+    text-align: center;
+}
+
+.form_register{
+    margin: 20px 30px 20px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    label{
+        margin: 5px;
+        width: 100%;
+        font-family: "NanumGothic-Regular";
+    }
+}
+
+.input_form{
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    font-size: 20px;
+    margin-bottom: 10px;
+    border-color: $color_recuadro_form;
+    border-radius: 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "NanumGothic-Regular";
+}
+
+
+.buttons{
+    margin-top: 30px;
+    width: 65%;
+    padding: 15px 10px;
+    border-radius: 30px;
+    background-color: $color20_buttons;
+    color: $color_white;
+}
+
+.a_href_class {
+    margin-top: 10px;
+    text-decoration: none;
+    color: $color20_buttons;
+    font-family: "NanumGothic-Regular";
+    font-size: 15px;
+    font-weight: bold;
+}
+
+p {
+    font-family: "NanumGothic-Regular";
+    font-size: 15px;
+}
+
+.menu_elements{
+    padding: 30px 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product_item{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}    
+
+.product_features{
+    display: flex;
+    flex-direction: column;
+}
+

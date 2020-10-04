@@ -1,0 +1,2 @@
+validar que en cant no venga letra, solo numero
+

@@ -576,7 +576,7 @@ function validacionProductosOrden (req, res, next){
 //
 
 //CREATE
-server.post("/ordenes",validacionOrden, validacionProductosOrden,(req, res, next) =>{
+server.post("/ordenes",(req, res, next) =>{
     let idUsuario = req.body.user_id;
     let metodoPago = req.body.payment_method_id;
     let detail = req.body.detail;
@@ -584,7 +584,7 @@ server.post("/ordenes",validacionOrden, validacionProductosOrden,(req, res, next
     detail.forEach(product => {
         descripcion = descripcion + product.quantity+"x"+product.product_name+" ";
     })
-    db.query ("INSERT INTO `delilah_resto`.`order` (`user_id`, `payment_method_id`, `description`) "+
+    db.query ("INSERT INTO `delilah_resto`.`status` (`user_id`, `payment_method_id`, `description`) "+
     "VALUES (:uid, :pmi, :d); ",{
         type: Sequelize.QueryTypes.INSERT,
         replacements:{
@@ -607,8 +607,7 @@ server.post("/ordenes",validacionOrden, validacionProductosOrden,(req, res, next
 })
 
 
-// Get Status
-
+// READ Status
 server.get ("/status",(req, res, next)=>{
     db.query ("SELECT "+
     "status_id, "+
@@ -624,6 +623,45 @@ server.get ("/status",(req, res, next)=>{
         console.log(error);
         res.status(500);
         res.json({message: error})
+    })
+})
+//
+
+//UpPDATE Status
+
+server.put ("/status",validaEdicionUsuario ,(req, res, next)=>{
+    let usuario = req.body.user_name;
+    let nombreUsuario = req.body.full_name;
+    let correoElectronico = req.body.email;
+    let telefono= req.body.phone;
+    let direccion = req.body.address;
+    let id = req.params.id;
+
+    db.query ("UPDATE `delilah_resto`.`user` SET "+
+    "`user_name` = :un, "+
+    "`full_name` = :fn, "+
+    "`email` = :e, "+
+    "`phone` = :ph, "+
+    "`address` = :a "+
+    "WHERE (`user_id` = :uid);",
+    {
+        type: Sequelize.QueryTypes.UPDATE,
+        replacements:{
+            un: usuario,
+            fn: nombreUsuario,
+            e: correoElectronico,
+            ph: telefono,
+            a: direccion,
+            uid: id
+        }
+    })
+    .then ((data)=>{
+        res.status(200).json ()//200 significa OK
+    })
+    .catch ((error)=>{
+        console.log(error);
+        res.status(500);
+        res.json ({message: error})
     })
 })
 
