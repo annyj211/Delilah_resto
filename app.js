@@ -576,34 +576,46 @@ function validacionProductosOrden (req, res, next){
 //
 
 //CREATE
-server.post("/ordenes",(req, res, next) =>{
-    let idUsuario = req.body.user_id;
-    let metodoPago = req.body.payment_method_id;
-    let detail = req.body.detail;
-    let descripcion = "";
-    detail.forEach(product => {
-        descripcion = descripcion + product.quantity+"x"+product.product_name+" ";
-    })
-    db.query ("INSERT INTO `delilah_resto`.`status` (`user_id`, `payment_method_id`, `description`) "+
-    "VALUES (:uid, :pmi, :d); ",{
-        type: Sequelize.QueryTypes.INSERT,
-        replacements:{
-            uid: idUsuario,
-            pmi: metodoPago,
-            d: descripcion,
-        }
-    }).then ((data)=>{
+server.post("/ordenes", validacionOrden, validacionProductosOrden, async(req, res) => {
 
-        /// inserta detalle orden
-
-        
-        res.json(data)
+    try{
+        let idUsuario = req.body.user_id;
+        let metodoPago = req.body.payment_method_id;
+        let detail = req.body.detail;
+        let descripcion = "";
+        detail.forEach(product => {
+            descripcion = descripcion + product.quantity+"x"+product.product_name+" ";
+        })
+        let data = await db.query ("INSERT INTO `delilah_resto`.`order` (`user_id`, `payment_method_id`, `description`) "+
+        "VALUES (:uid, :pmi, :d); ",{
+            type: Sequelize.QueryTypes.INSERT,
+            replacements:{
+                uid: idUsuario,
+                pmi: metodoPago,
+                d: descripcion,
+            }
+        })
+        let idOrder = data[0];
+        for (index = 0; index< detail.length ; index++) {  /// inserta detalle orden             
+            let promiseOrder = await db.query("INSERT INTO `delilah_resto`.`order_detail` "+
+                    "(`order_id`, `product_id`, `quantity`, `total_product_price`) "+
+                    "VALUES (:idor, :idp, :qty, :tot);",{
+                        type: Sequelize.QueryTypes.INSERT,
+                        replacements:{
+                            idor: idOrder,
+                            idp: detail[index].product_id,
+                            qty: detail[index].quantity,
+                            tot: (detail[index].quantity * detail[index].price)
+                        }
+                    });
+            console.log(promiseOrder);   
+        }                     
+        res.json(data)       
     }
-    )
-    .catch((error)=>{
+    catch (error){
         res.status(500)
         res.json({message:error})
-    })
+    }
 })
 
 
@@ -627,7 +639,7 @@ server.get ("/status",(req, res, next)=>{
 })
 //
 
-//UpPDATE Status
+//Update Status
 
 server.put ("/status",validaEdicionUsuario ,(req, res, next)=>{
     let usuario = req.body.user_name;
