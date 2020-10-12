@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delilah Restó</title>
+    <link rel="stylesheet" type= "text/css" href ="./style/styles.css">
+    <link rel="stylesheet" type= "text/css" href ="./style/explorer.css">
+    <script src="https://kit.fontawesome.com/d208220a76.js" crossorigin="anonymous"></script>
+    <style>
+        .sugest_images_father{
+            position: relative;
+        }
+    </style>
+</head>
+<body id="body_element" onload="productos ()">
+    <header>
+        Delilah Restó
+    </header>
+    <div class="menu_elements">
+        <p style="font-weight: bold; margin-bottom: 20px;">
+            Tus favoritos
+        </p>
+        <div class="display_sugest_images">
+            <div class="sugest_images_father">
+                <img id="sugest_menu_image" alt="plato" class="sugest_menu_image">
+                <p id="title_image" class="title_image">
+                </p>
+            </div>
+            <div class="container_price">
+                <label id="precio_image">
+                </label>
+                <a onclick="addItem ()">Añadir</a>
+            </div>
+        </div>
+        
+        <script src="./explorer.js"></script>
+</body>
+</html>

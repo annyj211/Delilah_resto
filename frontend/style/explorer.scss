@@ -1,0 +1,40 @@
+@import 'color';
+@import 'fonts';
+
+.display_sugest_images{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid  $color_gray_border;
+    border-radius: 5px;
+    width: 203px;
+    height: 120px;
+}
+
+.sugest_images_father {
+    position: relative;
+    height: 80px;
+}
+
+// .sugest_menu_image{
+//     margin-top: 20px;
+// }
+
+.title_image{
+    margin-top: -30px;
+    margin-left: 10px;
+    font-family: 'NanumGothic-Regular';
+    color: $color_black;
+    font-weight: bolder;
+    z-index: 1;
+}
+
+.container_price{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 15px 5px 20px 8px;
+}
+
+// #precio_image {
+    
+// }

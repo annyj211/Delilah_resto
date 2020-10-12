@@ -1,3 +1,19 @@
 FUENTES DE INFORMACION
 
 DATE_FORMAT(o.creation_date, "%H:%i") AS time //https://stackoverflow.com/questions/29573122/how-to-get-time-format-with-hours-and-minutes-from-mysql-database
+
+intento barra 
+
+
+en html 
+<input  type="range" min="1" max="100" value="100" id="fconfirmado" 
+                    name="fconfirmado" >
+<label for="fconfirmado">Confirmado</label>
+.slidecontainer {/*
+    width: 150px;
+    height: 2px;
+    margin: 0;
+    transform-origin: 75px 75px;
+    transform: rotate(-90deg); //Fuente: https://developer.mozilla.org/es/docs/Web/HTML/Elemento/input/range
+    */
+}
