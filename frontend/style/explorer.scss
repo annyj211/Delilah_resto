@@ -1,6 +1,15 @@
 @import 'color';
 @import 'fonts';
 
+.h2_fav{
+   font-weight: bold; 
+   margin-bottom: 20px;
+   font-family: 'NanumGothic-Regular';
+   font-size: 15px;
+   font-weight: bolder;
+}
+
+
 .display_sugest_images{
     display: flex;
     flex-direction: column;

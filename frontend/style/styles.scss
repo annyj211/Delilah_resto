@@ -13,6 +13,7 @@ header {
     background-color: $color1_tile;
     color: $color_white;
     font-family: "FredokaOne-Regular";
+    font-size: 20px;
     padding: 10px;
     text-align: center;
 }
@@ -50,6 +51,9 @@ header {
     border-radius: 30px;
     background-color: $color20_buttons;
     color: $color_white;
+    font-family: 'NanumGothic-Regular';
+    text-decoration: none; 
+    text-align: center;
 }
 
 .a_href_class {
@@ -183,4 +187,9 @@ p {
 
 .img_menu_item {
     width: 20%;
+}
+
+h2 {
+    font-family: "NanumGothic-Regular";
+    font-size: 15px;
 }

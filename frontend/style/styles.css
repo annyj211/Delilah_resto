@@ -15,6 +15,7 @@ header {
   background-color: #3addda;
   color: white;
   font-family: "FredokaOne-Regular";
+  font-size: 20px;
   padding: 10px;
   text-align: center; }
 
@@ -46,7 +47,10 @@ header {
   padding: 15px 10px;
   border-radius: 30px;
   background-color: #fc885c;
-  color: white; }
+  color: white;
+  font-family: 'NanumGothic-Regular';
+  text-decoration: none;
+  text-align: center; }
 
 .a_href_class {
   margin-top: 10px;
@@ -155,5 +159,9 @@ p {
 
 .img_menu_item {
   width: 20%; }
+
+h2 {
+  font-family: "NanumGothic-Regular";
+  font-size: 15px; }
 
 /*# sourceMappingURL=styles.css.map */

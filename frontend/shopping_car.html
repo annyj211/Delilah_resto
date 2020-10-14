@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delilah Restó</title>
+    <link rel="stylesheet" type= "text/css" href ="./style/styles.css">
+    <link rel="stylesheet" type= "text/css" href ="../frontend/style/confirm-pedido.css">
+
+</head>
+<body>
+    <header>
+        Delilah Restó
+    </header>
+
+    <div class="menu_elements">
+        <p style="font-weight: bold;">
+            Detalle
+        </p>
+        <div class="product_item">
+            <img src="./assets/images/Ensalada veggie.png" alt="Ensalada veggie" class="img_menu_item">
+            <div class="product_features">
+                <p>
+                hola mundo
+                </p>
+                <p>
+                    precio
+                </p>
+            </div>
+            <button>
+                <i class="far fa-times-circle" style="color: #fc885c; font-size: 30px; background-color:white;">
+                </i>
+            </button>
+        </div>
+        <div>
+            Total: <strong>$VALOR TOTAL</strong>
+        </div>
+        <label for="payment" style="font-family:NanumGothic-Regular; font-size: 15px; font-weight: bold;">Forma de pago</label>
+        <br>  
+        <form> 
+            <select name="payment" id="payment">
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+            </select>
+        </form> 
+        <h2>
+            Dirección
+        </h2>
+        <p id="address">
+            AQUI VA LA DIRECCION
+        </p>
+    </div>
+    <a href="./historial.html" class="buttons" style="margin-top: 50px; text-decoration: none; text-align: center; margin: 10px 80px;" >CONFIRMAR PEDIDO</a>
+</body>
+</html>
