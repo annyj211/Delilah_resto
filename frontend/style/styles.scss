@@ -183,10 +183,13 @@ p {
 .product_features{
     display: flex;
     flex-direction: column;
+    width: 70%;
+    padding: 5px;
 }
 
 .img_menu_item {
     width: 20%;
+    height: 54px;
 }
 
 h2 {

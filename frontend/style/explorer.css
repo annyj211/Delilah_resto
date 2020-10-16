@@ -37,4 +37,13 @@
   justify-content: space-between;
   padding: 15px 5px 20px 8px; }
 
+.product_title_class {
+  font-family: 'NanumGothic-Regular';
+  font-size: 20px; }
+
+.product_price_class {
+  font-family: 'NanumGothic-Regular';
+  font-size: 18px;
+  color: #767e84; }
+
 /*# sourceMappingURL=explorer.css.map */

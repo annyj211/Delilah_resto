@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,SAAS;EACL,KAAK,ECYM,OAAiB;EDX5B,SAAS,EAAE,IAAI;EACf,gBAAgB,EAAC,KAAK;EACtB,MAAM,EAAE,OAAO",
+"sources": ["shopping_car.scss","_color.scss"],
+"names": [],
+"file": "shopping_car.css"
+}
