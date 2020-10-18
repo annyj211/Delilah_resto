@@ -24,6 +24,27 @@ function login (){
         console.log("Esta es la respuesta json"); //9 se escribe dentro el del console.log "Esta es la respuesta json"
         console.log(dataJson);//10cambiar el parametro result por dataJson
         let token = dataJson.token; //11 crear variable para guardar el dataJson.data
+        localStorage.setItem ("token",token);
+        let user = parseJwt(token);
+        console.log(user);
+        localStorage.setItem("userName", user.full_name);
+        localStorage.setItem("userId", user.id);
+        window.location.href = "explorer.html"
     })
     .catch(error => console.json('error', error));
 }
+
+// How to decode jwt token in javascript without using a library?
+//FUENTE DE INFORMACIÓN: https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library
+
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+};
+
+//

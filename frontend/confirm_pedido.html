@@ -7,17 +7,17 @@
     <link rel="stylesheet" type= "text/css" href ="./style/styles.css">
     <link rel="stylesheet" type= "text/css" href ="../frontend/style/confirm-pedido.css">
 </head>
-<body>
+<body onload="userName()">
     <header>
         Delilah Restó
     </header>
     <img src="./assets/images/RecibimosPedido.png" class="recibimos_pedido" alt="Hemos recibido tu orden">
     <div class="container_text_center">
         <h2>¡Recibimos tu pedido</h2>
-        <p class="center_paragraph"> <!--AQUI VA EL NOMBRE DE LA PERSONA--> , gracias por pedir a 
-            Delilah. Puedes seguir tu pedido
-            para saber dónde está.</p>
+        <p class="center_paragraph" id="user_name_confirm_order"> <!--AQUI VA EL NOMBRE DE LA PERSONA--> 
+        </p>
             <a href="./historial.html" class="buttons" style="margin-top: 50px;" >SEGUIR PEDIDO</a>
     </div>
+    <script src="./confirm_pedido.js"></script>
 </body>
 </html>   

@@ -1,6 +1,6 @@
 //onload
 
-
+let listaProductosGlobal = [];
 
 function initializeExplorer(){
     let shoppingCar = localStorage.getItem ("thiIsTheShoppingCar");
@@ -27,6 +27,7 @@ function productos (){
             return response.json();
         })
         .then(dataJson => {
+            listaProductosGlobal = dataJson;
             console.log("Esta es la respuesta json");
             console.log(dataJson);
             let arrayProducts = dataJson;
@@ -72,11 +73,14 @@ function productos (){
         //     </div>
         //     <button style="color: #fc885c; font-size: 30px; background-color:white; cursor: pointer;">
                 let button = document.createElement("button");
+                button.name = arrayProducts[indice].product_id;
                 button.style = "color: #fc885c; font-size: 30px; background-color:white; cursor: pointer;"
+                button.onclick = addProduct;
                 divPrincipal.appendChild(button);
         //         <i class="fas fa-plus-circle"></i>
                     let icon = document.createElement("i");
                     icon.className = "fas fa-plus-circle";
+                    icon.id = arrayProducts[indice].product_id;
                     button.appendChild(icon);
             listaProductos.appendChild(divPrincipal);
         //     </button>
@@ -86,6 +90,12 @@ function productos (){
         })
         //innertext
         .catch(error => console.log('error', error));
+}
+
+function addProduct(event){
+    console.log(event.target)
+    let producto = listaProductosGlobal.find(element => element.product_id == product_id)
+    console.log(producto)
 }
 
 //
