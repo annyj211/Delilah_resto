@@ -2,7 +2,9 @@ let express = require ("express");
 let Sequelize = require ("sequelize");
 let jwt = require ("jsonwebtoken");
 let server = express ();
-const secretKey = "secret"; //password dificild e descifrar
+let swaggerUi = require("swagger-ui-express");
+let specs = require("./swagger");
+const secretKey = "secret"; //password dificil de descifrar
 
 server.use(express.json());
 
@@ -123,8 +125,64 @@ function validaEdicionUsuario (req, res, next){
     }
 }
 
+//-------------------------------------ORDERS
+//SWAGGER
 
-//ORDERS
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Order:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *         time:
+ *           type: string
+ *           format: time
+ *         order_id:
+ *           type: integer
+ *           format: int64
+ *         description:
+ *           type: string
+ *         payment_method:
+ *           type: string
+ *         total:
+ *           type: number
+ *           format: double
+ *         full_name:
+ *           type: string
+ *         address:
+ *           type: string  
+ *       
+ */
+
+
+/**
+ * @swagger
+ * /orders:
+ *    get:
+ *      description: This should return all orders
+ *      responses:
+ *       '200':    # status code
+ *         description: A JSON array of orders
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 "$ref": "#/components/schemas/Order"
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
+
 
 server.get ("/orders", (req, res, next)=>{
     db.query ("SELECT s.status,"+ 
@@ -697,6 +755,12 @@ server.get ("/metodospago",(req, res, next)=>{
     })
 })
 
+//swagger
+server.use(
+    "/swagger",
+    swaggerUi.serve,
+    swaggerUi.setup(specs)
+);
 
 //
 

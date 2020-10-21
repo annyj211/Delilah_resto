@@ -94,7 +94,7 @@ function productos (){
 
 function addProduct(event){
     console.log(event.target)
-    let producto = listaProductosGlobal.find(element => element.product_id == product_id)
+    let producto = listaProductosGlobal.find(element => element.product_id == event.target.id) //find se utiliza para 
     console.log(producto)
 }
 
