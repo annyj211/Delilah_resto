@@ -25,10 +25,31 @@ let db = new Sequelize (
     "mysql://root:1234@localhost:3306/delilah_resto"
 )
 
+//Authentication
+/**
+ * @swagger
+ * # 1) Define the security scheme type (HTTP bearer)
+ * components: 
+ *   securitySchemes:
+ *     BearerAuth:            # arbitrary name for the security scheme
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+ *
+ * # 2) Apply the security globally to all operations
+ * security: 
+ * - BearerAuth: [] 
+ *       
+ */
+
+
+
+
 //Middleware validate token
 
 function validateTokenAdmin (req, res, next) {
     try {
+        console.log('entro')
         let token = req.headers["authorization"];
         console.log(token)
         const bearer = token.split(' ');
@@ -215,12 +236,60 @@ server.get ("/orders", (req, res, next)=>{
     })
 })
 
-//PRODUCTOS
-
+//--------------------------------------------------------PRODUCTOS
 
 //CREATE READ UPDATE DELETE PRODUCTOS
+//---------------------------------------------READ
 
-//READ
+//SWAGGER
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ProductRead:
+ *       type: object
+ *       properties:
+ *         product_id:
+ *           type: integer
+ *           format: int64
+ *         product_name:
+ *           type: string
+ *         product_description:
+ *           type: string
+ *         price:
+ *           type: number 
+ *         image_url:
+ *           type: string  
+ *       
+ */
+
+
+/**
+ * @swagger
+ * /productos:
+ *    get:
+ *      description: This should return all products
+ *      responses:
+ *       '200':    # status code
+ *         description: A JSON array of products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 "$ref": "#/components/schemas/ProductRead"
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
+
 server.get ("/productos", (req, res, next)=>{
     db.query ("SELECT * FROM delilah_resto.product;", 
     {
@@ -235,7 +304,63 @@ server.get ("/productos", (req, res, next)=>{
     })
 })
 
-//CREATE
+//----------------------------------------------CREATE
+
+//SWAGGER
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ProductCreate:
+ *       type: object
+ *       properties:
+ *         product_name:
+ *           type: string
+ *         product_description:
+ *           type: string
+ *         price:
+ *           type: number 
+ *         image_url:
+ *           type: string  
+ *       
+ */
+
+
+/**
+ * @swagger
+ * /productos:
+ *    post:
+ *      description: This should add new products
+ *      security:
+ *        - bearerAuth: []
+ *      requestBody:
+ *       description: Optional description in *Markdown*
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *             $ref: '#/components/schemas/ProductCreate'
+ *      responses:
+ *       '201':    # status code
+ *         description: A JSON object of products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 "$ref": "#/components/schemas/ProductCreate"
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
+
 server.post ("/productos", validateTokenAdmin, validaProducto, (req, res, next)=>{
     let nombreProducto = req.body.product_name;
     let descripcionProducto = req.body.product_description;
