@@ -31,14 +31,14 @@ let db = new Sequelize (
  * # 1) Define the security scheme type (HTTP bearer)
  * components: 
  *   securitySchemes:
- *     BearerAuth:            # arbitrary name for the security scheme
+ *     bearerAuth:            # arbitrary name for the security scheme
  *       type: http
  *       scheme: bearer
  *       bearerFormat: JWT    # optional, arbitrary value for documentation purposes
  *
  * # 2) Apply the security globally to all operations
  * security: 
- * - BearerAuth: [] 
+ * - bearerAuth: [] 
  *       
  */
 
@@ -323,6 +323,7 @@ server.get ("/productos", (req, res, next)=>{
  *           type: number 
  *         image_url:
  *           type: string  
+ *           format: uri
  *       
  */
 
@@ -349,7 +350,7 @@ server.get ("/productos", (req, res, next)=>{
  *             schema:
  *               type: object
  *               items:
- *                 "$ref": "#/components/schemas/ProductCreate"
+ *                 "$ref": "#/components/schemas/ProductRead"
  *       '500':    # status code
  *          description: Internal server error
  *          content:
