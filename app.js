@@ -344,13 +344,11 @@ server.get ("/productos", (req, res, next)=>{
  *             $ref: '#/components/schemas/ProductCreate'
  *      responses:
  *       '201':    # status code
- *         description: A JSON object of products
+ *         description: Created, returns a JSON product object
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               items:
- *                 "$ref": "#/components/schemas/ProductRead"
+ *               "$ref": "#/components/schemas/ProductRead"
  *       '500':    # status code
  *          description: Internal server error
  *          content:
@@ -358,7 +356,8 @@ server.get ("/productos", (req, res, next)=>{
  *              schema:
  *                type: object
  *                properties:
- *                  message: string
+ *                  message: 
+ *                    type: object
  *                   
  */
 
