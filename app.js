@@ -260,7 +260,8 @@ server.get ("/orders", (req, res, next)=>{
  *         price:
  *           type: number 
  *         image_url:
- *           type: string  
+ *           type: string 
+ *           format: uri 
  *       
  */
 
@@ -344,11 +345,39 @@ server.get ("/productos", (req, res, next)=>{
  *             $ref: '#/components/schemas/ProductCreate'
  *      responses:
  *       '201':    # status code
- *         description: Created, returns a JSON product object
+ *         description: Created, returns a product JSON object
  *         content:
  *           application/json:
  *             schema:
  *               "$ref": "#/components/schemas/ProductRead"
+ *       '400':    # status code
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '403':  # status code
+ *          description: Forbidden
+ *          content:
+ *            application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:          
+ *                   type: string
+ * 
  *       '500':    # status code
  *          description: Internal server error
  *          content:
