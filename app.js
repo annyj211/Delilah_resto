@@ -674,7 +674,7 @@ server.post ("/usuarios", validaCreacionUsuario,  (req, res, next)=>{
 })
 
     //----------------------------------------READ USUARIOS
-server.get ("/usuarios",(req, res, next)=>{
+server.get ("/usuarios",validateTokenAdmin,(req, res, next)=>{
     db.query ("SELECT "+
     "user_id, "+
     "role_id, "+
@@ -832,7 +832,34 @@ server.post("/ordenes", validacionOrden, validacionProductosOrden, async(req, re
 
     //--------------------------READ ORDENES
 
-
+    server.get ("/ordenes/:id", validateToken,(req, res, next)=>{
+        let order_id = req.params.id;
+        let user_id = req.body.user_id;
+        db.query ("SELECT * FROM delilah_resto.order where order_id = :oid", 
+        {
+            type: Sequelize.QueryTypes.SELECT,
+            replacements:{
+                oid: order_id,
+            }
+        })
+        .then ((data)=>{
+            if(data.length==0){
+                res.status(404);
+                res.json({message:"Orden no encontrada"})
+            }else {
+                if (data[0].user_id!=user_id){
+                    res.status(403);
+                    res.json({message:"El usuario no esta autorizado para ver esta orden"})
+                }else{
+                    res.json(data[0]);
+                }
+            }            
+        })
+        .catch ((error)=>{
+            res.status(500);
+            res.json({message: error})
+        })
+    })
 
     //-------------------------UPDATE ORDENES
 
