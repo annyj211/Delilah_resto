@@ -244,7 +244,20 @@ function validacionProductosOrden (req, res, next){
     })
     next();
 }
-//
+
+//Middleware actualizaOrder
+
+function actualizaOrder (req, res, next){
+    let status_id = req.body.status_id;
+    let order_id = req.body.order_id;
+    
+    if (status_id&&order_id){
+        next();
+    }else {
+        res.status(400);
+        res.json({message:"La información de la orden esta incompleta"})
+    }
+}
 
 //----------------------------------------------------------LOGIN 
 
@@ -823,41 +836,27 @@ server.post("/ordenes", validacionOrden, validacionProductosOrden, async(req, re
 
     //-------------------------UPDATE ORDENES
 
-    // server.put ("/status",validaEdicionUsuario ,(req, res, next)=>{
-    //     let usuario = req.body.user_name;
-    //     let nombreUsuario = req.body.full_name;
-    //     let correoElectronico = req.body.email;
-    //     let telefono= req.body.phone;
-    //     let direccion = req.body.address;
-    //     let id = req.params.id;
-    
-    //     db.query ("UPDATE `delilah_resto`.`user` SET "+
-    //     "`user_name` = :un, "+
-    //     "`full_name` = :fn, "+
-    //     "`email` = :e, "+
-    //     "`phone` = :ph, "+
-    //     "`address` = :a "+
-    //     "WHERE (`user_id` = :uid);",
-    //     {
-    //         type: Sequelize.QueryTypes.UPDATE,
-    //         replacements:{
-    //             un: usuario,
-    //             fn: nombreUsuario,
-    //             e: correoElectronico,
-    //             ph: telefono,
-    //             a: direccion,
-    //             uid: id
-    //         }
-    //     })
-    //     .then ((data)=>{
-    //         res.status(200).json ()//200 significa OK
-    //     })
-    //     .catch ((error)=>{
-    //         console.log(error);
-    //         res.status(500);
-    //         res.json ({message: error})
-    //     })
-    // })
+server.put ("/ordenes",validateTokenAdmin, actualizaOrder,(req, res, next)=>{
+   
+    let status_id = req.body.status_id;
+    let order_id = req.body.order_id;
+    db.query ("UPDATE `delilah_resto`.`order` SET `status_id` = :sid WHERE (`order_id` = :oid); ",
+    {
+        type: Sequelize.QueryTypes.UPDATE,
+        replacements:{
+            sid: status_id,
+            oid: order_id
+        }
+    })
+    .then ((data)=>{
+        res.status(200).json ()//200 significa OK
+    })
+    .catch ((error)=>{
+        console.log(error);
+        res.status(500);
+        res.json ({message: error})
+    })
+})
 
 
 
