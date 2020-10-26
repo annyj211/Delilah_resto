@@ -4,9 +4,9 @@ Este proyectto  bla bla bla
 
 ## Requisitos
 
-    Para el correcto funcionamiento del servidor es necesario contar con:
-        - NodeJS.
-        - MySQL.
+Para el correcto funcionamiento del servidor es necesario contar con:
+    - NodeJS.
+    - MySQL.
 
 ## Base de datos 
 
