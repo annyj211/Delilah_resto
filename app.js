@@ -573,6 +573,7 @@ server.get ("/productos", validateToken,(req, res, next)=>{
 })
 
     //--------------------------------UPDATE PRODUCTOS
+    
 server.put ("/productos/:id", validateTokenAdmin, validaProducto,(req, res, next)=>{
     let nombreProducto = req.body.product_name;
     let descripcionProducto = req.body.product_description;
