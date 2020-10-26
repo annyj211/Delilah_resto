@@ -6,8 +6,9 @@ Este proyectto  bla bla bla
 
 Para el correcto funcionamiento del servidor es necesario contar con:
 
-    - NodeJS.
     - MySQL.
+    - NodeJS.    
+    - Postman
 
 ## Base de datos 
 
