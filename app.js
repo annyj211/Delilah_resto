@@ -261,6 +261,75 @@ function actualizaOrder (req, res, next){
 
 //----------------------------------------------------------LOGIN 
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Login:
+ *       type: object
+ *       properties:
+ *         user_name:
+ *           type: string
+ *         password:
+ *           type: string
+ *           format: time 
+ *       
+ */
+
+
+/**
+ * @swagger
+ * /login:
+ *    post:
+ *      description: Login a user
+ *      requestBody:
+ *       description: Login Object
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *             $ref: '#/components/schemas/Login'
+ *      responses:
+ *       '200':    # status code
+ *         description: Login a user 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  token: 
+ *                    type: string
+ *                    format: jwt
+ *       '400':    # status code
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: 
+ *                    type: object
+ *                   
+ */
+
 server.post ("/login", loginUsuario, (req, res, next)=>{
     let usuario = req.body.user_name;
     let contrasena = req.body.password;
@@ -290,7 +359,7 @@ server.post ("/login", loginUsuario, (req, res, next)=>{
     })
     .catch ((error)=>{
         res.status(500);
-        res.json (error)
+        res.json ({message: error})
     })
 })
 //

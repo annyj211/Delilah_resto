@@ -1,6 +1,6 @@
 # Delilah Restó 
 
-Este proyectto  bla bla bla
+Este proyecto  bla bla bla
 
 ## Requisitos
 
@@ -8,7 +8,7 @@ Para el correcto funcionamiento del servidor es necesario contar con:
 
     - MySQL.
     - NodeJS.    
-    - Postman
+    - Postman (Para pruebas)
 
 ## Base de datos 
 
