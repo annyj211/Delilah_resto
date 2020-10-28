@@ -1102,17 +1102,10 @@ server.put ("/usuarios/:id",validateToken, validaEdicionUsuario ,(req, res, next
  *     UserPassword:
  *       type: object
  *       properties:
- *         user_name:
+ *         password:
  *           type: string
- *         full_name:
+ *         confirmPassword:
  *           type: string
- *         email:
- *           type: string 
- *           format: email
- *         phone:
- *           type: string  
- *         address:
- *           type: string        
  *       
  */
 
