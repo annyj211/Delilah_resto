@@ -642,6 +642,74 @@ server.get ("/productos", validateToken,(req, res, next)=>{
 })
 
     //--------------------------------UPDATE PRODUCTOS
+
+ /**
+ * @swagger
+ * /productos:
+ *    put:
+ *      description: This should add new products
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Numeric ID of the product to edit
+ *      requestBody:
+ *       description: Optional description in *Markdown*
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *             $ref: '#/components/schemas/ProductCreate'
+ *      responses:
+ *       '200':    # status code
+ *         description: Created, returns a product JSON object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               "$ref": "#/components/schemas/ProductRead"
+ *       '400':    # status code
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '403':  # status code
+ *          description: Forbidden
+ *          content:
+ *            application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:          
+ *                   type: string
+ * 
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: 
+ *                    type: object
+ *                   
+ */   
     
 server.put ("/productos/:id", validateTokenAdmin, validaProducto,(req, res, next)=>{
     let nombreProducto = req.body.product_name;
@@ -676,7 +744,52 @@ server.put ("/productos/:id", validateTokenAdmin, validaProducto,(req, res, next
 })
 
     //---------------------------------------DELETE PRODUCTOS
-
+/**
+ * @swagger
+ * /productos:
+ *    delete:
+ *      description: This should delete a product by id
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Numeric ID of the product to delete
+ *      responses:
+ *       '200':    # status code
+ *         description: A succesfull response
+ *         
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '403':  # status code
+ *          description: Forbidden
+ *          content:
+ *            application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:          
+ *                   type: string
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
 server.delete ("/productos/:id",validateTokenAdmin,(req, res, next)=>{
     let id = req.params.id;
     db.query("DELETE FROM `delilah_resto`.`product` WHERE (`product_id` = :pid);",
@@ -698,6 +811,72 @@ server.delete ("/productos/:id",validateTokenAdmin,(req, res, next)=>{
 //---------------------------------------------------------------CRUD USUARIOS
 
     //----------------------------------------CREATE USUARIOS
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserCreate:
+ *       type: object
+ *       properties:
+ *         user_name:
+ *           type: string
+ *         full_name:
+ *           type: string
+ *         email:
+ *           type: string 
+ *           format: email
+ *         phone:
+ *           type: string  
+ *         address:
+ *           type: string
+ *         password:
+ *           type: string
+ *       
+ */
+
+
+/**
+ * @swagger
+ * /usuarios:
+ *    post:
+ *      description: This should add new users
+ *      requestBody:
+ *       description: Optional description in *Markdown*
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *             $ref: '#/components/schemas/UserCreate'
+ *      responses:
+ *       '201':    # status code
+ *         description: Created, returns a product JSON object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               "$ref": "#/components/schemas/UserCreate"
+ *       '400':    # status code
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ * 
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: 
+ *                    type: object
+ *                   
+ */
+
 
 server.post ("/usuarios", validaCreacionUsuario,  (req, res, next)=>{
     let usuario = req.body.user_name;
@@ -744,6 +923,33 @@ server.post ("/usuarios", validaCreacionUsuario,  (req, res, next)=>{
 })
 
     //----------------------------------------READ USUARIOS
+
+
+ //------------Swagger
+ 
+ /**
+ * @swagger
+ * /usuarios:
+ *    get:
+ *      description: This should return all users
+ *      responses:
+ *       '200':    # status code
+ *         description: A JSON array of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
+
 server.get ("/usuarios",validateTokenAdmin,(req, res, next)=>{
     db.query ("SELECT "+
     "user_id, "+
@@ -836,7 +1042,52 @@ server.put ("/usuarios/password/:id",validateToken, validaCamposContrasena, pass
 })
 
     //--------------------------------------------DELETE USUARIOS
-
+/**
+ * @swagger
+ * /usuarios:
+ *    delete:
+ *      description: This should delete a user by id
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Numeric ID of the user to delete
+ *      responses:
+ *       '200':    # status code
+ *         description: A succesfull response
+ *         
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '403':  # status code
+ *          description: Forbidden
+ *          content:
+ *            application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:          
+ *                   type: string
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
 server.delete ("/usuarios/:id",validateTokenAdmin, (req, res, next)=>{
     let id = req.params.id;
     db.query("DELETE FROM `delilah_resto`.`user` WHERE (`user_id` = :uid);",
@@ -858,6 +1109,96 @@ server.delete ("/usuarios/:id",validateTokenAdmin, (req, res, next)=>{
 //----------------------------------------------------------------CRUD ORDENES
 
     //----------------------------------------CREATE ORDENES
+
+//SWAGGER
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     OrderCreate:
+ *       type: object
+ *       properties:
+ *         user_id:
+ *           type: number
+ *         payment_method_id:
+ *           type: number
+ *         detail:
+ *           type: array
+ *           items:
+ *              "$ref": "#/components/schemas/OrderDetail"
+ * 
+ */
+ /**
+ * @swagger
+ * components:
+ *   schemas:
+ *     OrderDetail:
+ *       type: object
+ *       properties:
+ *         product_id:
+ *           type: number
+ *         product_name:
+ *           type: string
+ *         price:
+ *           type: number  
+ *         quantity:
+ *           type: number  
+ *       
+ */
+
+
+/**
+ * @swagger
+ * /ordenes:
+ *    post:
+ *      description: This should add new orders
+ *      security:
+ *        - bearerAuth: []
+ *      requestBody:
+ *       description: Optional description in *Markdown*
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *             $ref: '#/components/schemas/OrderCreate'
+ *      responses:
+ *       '201':    # status code
+ *         description: Created, returns a product JSON object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *       '400':    # status code
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: 
+ *                    type: object
+ *                   
+ */
+
 server.post("/ordenes", validacionOrden, validacionProductosOrden, async(req, res) => {
 
     try{
@@ -891,7 +1232,8 @@ server.post("/ordenes", validacionOrden, validacionProductosOrden, async(req, re
                         }
                     });
             console.log(promiseOrder);   
-        }                     
+        } 
+        res.status(201);                    
         res.json(data)       
     }
     catch (error){
@@ -902,34 +1244,66 @@ server.post("/ordenes", validacionOrden, validacionProductosOrden, async(req, re
 
     //--------------------------READ ORDENES
 
-    server.get ("/ordenes/:id", validateToken,(req, res, next)=>{
-        let order_id = req.params.id;
-        let user_id = req.body.user_id;
-        db.query ("SELECT * FROM delilah_resto.order where order_id = :oid", 
-        {
-            type: Sequelize.QueryTypes.SELECT,
-            replacements:{
-                oid: order_id,
-            }
-        })
-        .then ((data)=>{
-            if(data.length==0){
-                res.status(404);
-                res.json({message:"Orden no encontrada"})
-            }else {
-                if (data[0].user_id!=user_id){
-                    res.status(403);
-                    res.json({message:"El usuario no esta autorizado para ver esta orden"})
-                }else{
-                    res.json(data[0]);
-                }
-            }            
-        })
-        .catch ((error)=>{
-            res.status(500);
-            res.json({message: error})
-        })
+ //------------Swagger
+ 
+ /**
+ * @swagger
+ * /ordenes:
+ *    get:
+ *      description: This should return one order
+ *      parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Numeric ID of the order
+ *      responses:
+ *       '200':    # status code
+ *         description: A JSON object of order
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
+
+server.get ("/ordenes/:id", validateToken,(req, res, next)=>{
+    let order_id = req.params.id;
+    let user_id = req.body.user_id;
+    db.query ("SELECT * FROM delilah_resto.order where order_id = :oid", 
+    {
+        type: Sequelize.QueryTypes.SELECT,
+        replacements:{
+            oid: order_id,
+        }
     })
+    .then ((data)=>{
+        if(data.length==0){
+            res.status(404);
+            res.json({message:"Orden no encontrada"})
+        }else {
+            if (data[0].user_id!=user_id){
+                res.status(403);
+                res.json({message:"El usuario no esta autorizado para ver esta orden"})
+            }else{
+                res.json(data[0]);
+            }
+        }            
+    })
+    .catch ((error)=>{
+        res.status(500);
+        res.json({message: error})
+    })
+})
 
     //-------------------------UPDATE ORDENES
 
@@ -958,6 +1332,32 @@ server.put ("/ordenes",validateTokenAdmin, actualizaOrder,(req, res, next)=>{
 
 
 //----------------------------------------------------------------READ STATUS
+
+ //------------Swagger
+ 
+ /**
+ * @swagger
+ * /status:
+ *    get:
+ *      description: This should return all status
+ *      responses:
+ *       '200':    # status code
+ *         description: A JSON array of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
+
 server.get ("/status",(req, res, next)=>{
     db.query ("SELECT "+
     "status_id, "+
@@ -977,6 +1377,32 @@ server.get ("/status",(req, res, next)=>{
 })
 
 //----------------------------------------------------------READ Payment Method
+
+ //------------Swagger
+ 
+ /**
+ * @swagger
+ * /metodospago:
+ *    get:
+ *      description: This should return all payment methods
+ *      responses:
+ *       '200':    # status code
+ *         description: A JSON array of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
+
 server.get ("/metodospago",(req, res, next)=>{
     db.query ("SELECT "+
     "payment_method_id, "+
