@@ -403,6 +403,8 @@ server.post ("/login", loginUsuario, (req, res, next)=>{
  * /orders:
  *    get:
  *      description: This should return all orders
+ *      security:
+ *        - bearerAuth: []
  *      responses:
  *       '200':    # status code
  *         description: A JSON array of orders
@@ -607,6 +609,8 @@ server.post ("/productos", validateTokenAdmin, validaProducto, (req, res, next)=
  * /productos:
  *    get:
  *      description: This should return all products
+ *      security:
+ *        - bearerAuth: []
  *      responses:
  *       '200':    # status code
  *         description: A JSON array of products
@@ -932,6 +936,8 @@ server.post ("/usuarios", validaCreacionUsuario,  (req, res, next)=>{
  * /usuarios:
  *    get:
  *      description: This should return all users
+ *      security:
+ *        - bearerAuth: []
  *      responses:
  *       '200':    # status code
  *         description: A JSON array of users
@@ -972,9 +978,86 @@ server.get ("/usuarios",validateTokenAdmin,(req, res, next)=>{
     })
 })
 
-    //---------------------------------------UPDATE USUARIOS
+    //---------------------------------------UPDATE USUARIOS}
 
-server.put ("/usuarios/:id",validaEdicionUsuario ,(req, res, next)=>{
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateUser:
+ *       type: object
+ *       properties:
+ *         user_name:
+ *           type: string
+ *         full_name:
+ *           type: string
+ *         email:
+ *           type: string 
+ *           format: email
+ *         phone:
+ *           type: string  
+ *         address:
+ *           type: string        
+ *       
+ */
+
+/**
+ * @swagger
+ * /usuarios:
+ *    put:
+ *      description: This should update users
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Numeric ID of the user to edit
+ *      requestBody:
+ *       description: Optional description in *Markdown*
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *             $ref: '#/components/schemas/UpdateUser'
+ *      responses:
+ *       '200':    # status code
+ *         description: Created, returns a product JSON object
+ *         
+ *       '400':    # status code
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ * 
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: 
+ *                    type: object
+ *                   
+ */   
+
+server.put ("/usuarios/:id",validateToken, validaEdicionUsuario ,(req, res, next)=>{
     let usuario = req.body.user_name;
     let nombreUsuario = req.body.full_name;
     let correoElectronico = req.body.email;
@@ -1011,6 +1094,84 @@ server.put ("/usuarios/:id",validaEdicionUsuario ,(req, res, next)=>{
 })
 
     //-------------------------------------------UPDATE USUARIOS
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserPassword:
+ *       type: object
+ *       properties:
+ *         user_name:
+ *           type: string
+ *         full_name:
+ *           type: string
+ *         email:
+ *           type: string 
+ *           format: email
+ *         phone:
+ *           type: string  
+ *         address:
+ *           type: string        
+ *       
+ */
+
+/**
+ * @swagger
+ * /usuarios/password/:
+ *    put:
+ *      description: This should update users
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Numeric ID of the user to edit
+ *      requestBody:
+ *       description: Optional description in *Markdown*
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *             $ref: '#/components/schemas/UserPassword'
+ *      responses:
+ *       '200':    # status code
+ *         description: Created, returns a product JSON object
+ *  
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *         
+ *       '400':    # status code
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ * 
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: 
+ *                    type: object
+ *                   
+ */   
 
 server.put ("/usuarios/password/:id",validateToken, validaCamposContrasena, passwordLength, passwordMatch, (req, res, next)=>{
     let password = req.body.password;
@@ -1199,7 +1360,7 @@ server.delete ("/usuarios/:id",validateTokenAdmin, (req, res, next)=>{
  *                   
  */
 
-server.post("/ordenes", validacionOrden, validacionProductosOrden, async(req, res) => {
+server.post("/ordenes", validateToken, validacionOrden, validacionProductosOrden, async(req, res) => {
 
     try{
         let idUsuario = req.body.user_id;
@@ -1251,6 +1412,8 @@ server.post("/ordenes", validacionOrden, validacionProductosOrden, async(req, re
  * /ordenes:
  *    get:
  *      description: This should return one order
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *       - in: path
  *         name: id
@@ -1306,6 +1469,77 @@ server.get ("/ordenes/:id", validateToken,(req, res, next)=>{
 })
 
     //-------------------------UPDATE ORDENES
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     OrderStatus:
+ *       type: object
+ *       properties:
+ *         order_id:
+ *           type: number
+ *         status_id:
+ *           type: number         
+ *       
+ */  
+    
+/**
+ * @swagger
+ * /ordenes:
+ *    put:
+ *      description: This updates the order status
+ *      security:
+ *        - bearerAuth: []
+ *      requestBody:
+ *       description: Optional description in *Markdown*
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *             $ref: '#/components/schemas/OrderStatus'
+ *      responses:
+ *       '200':    # status code
+ *         description: Successfull response
+ *         
+ *       '400':    # status code
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '403':    # status code
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: 
+ *                    type: object
+ *                   
+ */
 
 server.put ("/ordenes",validateTokenAdmin, actualizaOrder,(req, res, next)=>{
    
