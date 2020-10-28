@@ -60,3 +60,11 @@ node app.js
 ## Postman
 
 En la ruta Postman se encuentra la colección de peticiones para consumir los servicios del proyecto.
+
+## Swagger
+
+Una vez iniciado el servidor express, se puede acceder al swagger en la ruta:
+
+```
+http://localhost:3010/swagger/
+```
