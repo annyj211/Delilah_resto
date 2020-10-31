@@ -135,3 +135,11 @@ ALTER TABLE `delilah_resto`.`order`
 ADD CONSTRAINT `fk_status_id`
   FOREIGN KEY (`status_id`)
   REFERENCES `delilah_resto`.`status` (`status_id`);
+
+ALTER TABLE `delilah_resto`.`order_detail` 
+DROP FOREIGN KEY `fk_order_id`;
+ALTER TABLE `delilah_resto`.`order_detail` 
+ADD CONSTRAINT `fk_order_id`
+  FOREIGN KEY (`order_id`)
+  REFERENCES `delilah_resto`.`order` (`order_id`)
+  ON DELETE CASCADE;

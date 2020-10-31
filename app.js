@@ -1,5 +1,6 @@
 let express = require ("express");
 let Sequelize = require ("sequelize");
+let db_data = require('./data_base');
 let jwt = require ("jsonwebtoken");
 let server = express ();
 let swaggerUi = require("swagger-ui-express");
@@ -21,9 +22,17 @@ server.use((req, res, next) => {
 //
 
 
-let db = new Sequelize (
-    "mysql://root:1234@localhost:3306/delilah_resto"
-)
+//let db = new Sequelize (
+//     "mysql://root:1234@localhost:3306/delilah_resto"
+// )
+let db  = new Sequelize(db_data.conf_db_name, db_data.conf_user, db_data.conf_password, { 
+    host: db_data.conf_db_host,
+    dialect: 'mysql',
+    port: db_data.conf_port,
+    dialectOptions: {
+        multipleStatements: true
+    }
+});
 
 //Authentication
 /**
@@ -1556,6 +1565,72 @@ server.put ("/ordenes",validateTokenAdmin, actualizaOrder,(req, res, next)=>{
     })
 })
 
+    //-------------------------DELETE ORDENES
+/**
+ * @swagger
+ * /ordenes:
+ *    delete:
+ *      description: This should delete a order by id
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *       - in: path
+ *         name: order_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Numeric ID of the order to delete
+ *      responses:
+ *       '200':    # status code
+ *         description: A succesfull response
+ *         
+ *       '401':    # status code
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:          
+ *                    type: string
+ *       '403':  # status code
+ *          description: Forbidden
+ *          content:
+ *            application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:          
+ *                   type: string
+ *       '500':    # status code
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message: string
+ *                   
+ */
+
+    server.delete ("/ordenes/:order_id",validateTokenAdmin, (req, res, next)=>{
+        let orderId = req.params.order_id;
+        db.query("DELETE FROM `delilah_resto`.`order` WHERE (`order_id` = :oid);",
+        {
+            type: Sequelize.QueryTypes.DELETE,
+            replacements:{
+                oid: orderId
+            }
+        })
+        .then ((data)=>{
+            res.json (data);
+            res.json ({message:"La orden fue eliminada satisfactoriamente"})
+        })
+        .catch ((error)=>{
+            res.status(500);
+            res.json ({message: error})
+        })
+    })
 
 
 //----------------------------------------------------------------READ STATUS

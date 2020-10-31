@@ -174,7 +174,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user_name\": \"maria@gmail.com\",\r\n    \"password\": \"sena\"\r\n}",
+					"raw": "{\r\n    \"user_name\": \"lssg\",\r\n    \"password\": \"contrasenaadmin\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -238,14 +238,29 @@
 		{
 			"name": "Put Contraseña",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Niwicm9sZSI6IlVzZXIiLCJmdWxsX25hbWUiOiJEaWVnbyBSdWl6IiwiaWF0IjoxNjAzNjY5ODQ5fQ.jraiothQ28Jc25EDB9OzOXeWTtCSqLOeN_RkihRaMHc",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\r\n  \"password\": \"string\",\r\n  \"confirmPassword\": \"string\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
-					"raw": "http://localhost:3010/usuarios/password/3",
+					"raw": "http://localhost:3010/usuarios/password/6",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -254,7 +269,7 @@
 					"path": [
 						"usuarios",
 						"password",
-						"3"
+						"6"
 					]
 				}
 			},
@@ -267,7 +282,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user_id\":\"6\",\r\n    \"payment_method_id\":\"1\",\r\n    \"detail\":\r\n    [\r\n        {\r\n            \"product_id\":\"1\", \r\n            \"product_name\":\"Bagel de salmón\",\r\n            \"price\":\"425\", \r\n            \"quantity\":\"1\"\r\n        }\r\n    ]\r\n}",
+					"raw": "{\r\n    \"user_id\":1,\r\n    \"payment_method_id\":1,\r\n    \"detail\":\r\n    [\r\n        {\r\n            \"product_id\":1, \r\n            \"product_name\":\"Bagel de salmón\",\r\n            \"price\":425, \r\n            \"quantity\":1\r\n        }\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -401,6 +416,36 @@
 					"path": [
 						"ordenes",
 						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Order_detail_id by admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiZnVsbF9uYW1lIjoiTHV6IFN0ZWxsYSBTb3RvIEciLCJpYXQiOjE2MDQwOTgzMTV9.NrdsmYb_sm6keMZLX30S6qsJG2zzl1bkoUEL0-H3_Ec",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3010/ordenes/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"ordenes",
+						"2"
 					]
 				}
 			},

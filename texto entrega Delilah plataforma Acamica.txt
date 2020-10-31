@@ -1,0 +1,1 @@
+Empecé por crear el proyecto en GIT y conjuntamente fui creando de a poco cada uno de los servicios. Cree en un Excel el esquema de la base de datos para que al crearla en MySQL Workbench fuera mas claro todo. Por ultimo realice la documentación Swagger que aunque es aparentemente sencilla tiende a generar muchos errores por espacios.
