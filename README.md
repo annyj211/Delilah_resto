@@ -41,6 +41,8 @@ Al ejecutar este comando se instalaran las siguientes librerias
 
 ## Ejecutar el proyecto
 
+En el archivo data_base.js se debe configurar los parametros de conexión a la base de datos.
+
 Una vez instaladas todas las dependencias y que ya existe la base de datos ejecutar el siguiente comando para iniciar el servidor Express en el puerto 3010:
 
 ```
